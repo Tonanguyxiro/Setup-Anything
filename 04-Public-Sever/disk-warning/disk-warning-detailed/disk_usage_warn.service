@@ -1,6 +1,12 @@
 [Unit]
-Description=Generate disk usage warning login report
+Description=Scan disks and generate disk usage warning reports
+Documentation=https://github.com/Tonanguyxiro/Sever-Setup
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh /etc/profile.d/disk_usage_warn.sh --update-log
+ExecStart=/usr/local/sbin/disk_usage_warn.sh --scan
+# 扫描是纯 IO 负载，降到最低优先级，避免影响线上任务
+Nice=19
+IOSchedulingClass=idle
+CPUSchedulingPolicy=idle
+TimeoutStartSec=3h

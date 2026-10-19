@@ -1,9 +1,11 @@
 [Unit]
-Description=Refresh disk usage warning login report every 12 hours
+Description=Refresh disk usage warning reports daily at 06:00
 
 [Timer]
-OnBootSec=5min
-OnUnitActiveSec=12h
+# 每天凌晨 6 点扫描
+OnCalendar=*-*-* 06:00:00
+AccuracySec=1min
+# 到点时机器是关着的，开机后补跑一次
 Persistent=true
 Unit=disk_usage_warn.service
 
