@@ -1,0 +1,3 @@
+# 本地生成的真实输出示例（含真实用户名与路径），不进仓库
+example-output.local.txt
+*.local.txt
