@@ -45,3 +45,54 @@
 
 ## 使用说明
 
+在仓库根目录运行统一入口：
+
+```bash
+./setup.sh
+```
+
+菜单使用 Bash `read` 读取按键，并通过 ANSI 转义序列渲染。按 `↑`/`↓` 或 `j`/`k` 移动，按 `Enter` 确认。界面实现位于 [`tui/tui.sh`](./tui/tui.sh)，配置业务逻辑保留在 `setup.sh`。
+
+主界面分为两部分：
+
+- **工作环境**：只修改当前用户的文件，不调用 `sudo`。可以管理自动代理、Zsh 和 Tmux 配置；已有文件会通过受控标记或备份机制保留。
+- **服务器管理**：管理系统级服务。只读状态检查不需要 root；安装、更新和卸载操作会明确调用 `sudo`。
+
+也可以直接使用命令行子命令：
+
+```bash
+./setup.sh configure          # 配置或更新当前用户的自动代理
+./setup.sh remove             # 移除自动代理配置
+./setup.sh status             # 查看自动代理配置状态
+./setup.sh zsh configure      # 配置 Zsh，已有 .zshrc 会先备份
+./setup.sh tmux configure     # 将仓库配置接入现有 .tmux.conf
+./setup.sh server status      # 只读查看详细磁盘告警状态
+```
+
+### 为只读管理命令配置 sudo 放行
+
+如果服务器的权限策略要求 root 才能读取服务状态，管理员可以通过 `/etc/sudoers.d/` 只放行经过审核的只读命令。不要放行 `setup.sh` 整个脚本、Shell、编辑器、带通配符的命令或任意 `systemctl` 子命令。
+
+先确认命令的绝对路径：
+
+```bash
+command -v systemctl
+command -v journalctl
+```
+
+然后由管理员使用 `visudo` 编辑独立规则：
+
+```bash
+sudo visudo -f /etc/sudoers.d/server-setup-readonly
+```
+
+下面仅为示例。管理员需要根据本机路径、用户组和实际只读命令调整，并用 `visudo -c` 检查语法：
+
+```sudoers
+Cmnd_Alias SERVER_SETUP_READONLY = /usr/bin/systemctl is-active disk_usage_warn.timer, \
+    /usr/bin/systemctl is-enabled disk_usage_warn.timer, \
+    /usr/bin/journalctl --no-pager -u disk_usage_warn.service
+%server-operators ALL=(root) NOPASSWD: SERVER_SETUP_READONLY
+```
+
+参数是 sudoers 命令匹配的一部分。示例使用不会启动分页器的 `systemctl` 子命令，并为 `journalctl` 指定 `--no-pager`。TUI 增加新的只读检查后，管理员应逐条审核并添加精确命令，不要使用 `*` 扩大权限。
