@@ -8,10 +8,10 @@ TUI_LIBRARY="${SCRIPT_DIR}/tui/tui.sh"
 [[ -r "$TUI_LIBRARY" ]] || { printf 'Error: missing TUI library: %s\n' "$TUI_LIBRARY" >&2; exit 1; }
 # shellcheck disable=SC1090
 source "$TUI_LIBRARY"
-DISK_WARNING_INSTALLER="${SCRIPT_DIR}/04-Public-Sever/disk-warning/disk-warning-detailed/install.sh"
-ZSH_TEMPLATE="${SCRIPT_DIR}/01-WorkSpace/terminal/zsh/.zshrc"
-OMZ_INSTALLER="${SCRIPT_DIR}/01-WorkSpace/terminal/zsh/install.sh"
-TMUX_TEMPLATE="${SCRIPT_DIR}/01-WorkSpace/terminal/tmux/.tmux.conf"
+DISK_WARNING_INSTALLER="${SCRIPT_DIR}/02-Remote-Server-Management/disk-warning/disk-warning-detailed/install.sh"
+ZSH_TEMPLATE="${SCRIPT_DIR}/01-Workspace/general/terminal/zsh/.zshrc"
+OMZ_INSTALLER="${SCRIPT_DIR}/01-Workspace/general/terminal/zsh/install.sh"
+TMUX_TEMPLATE="${SCRIPT_DIR}/01-Workspace/general/terminal/tmux/.tmux.conf"
 MANAGED_HOME="${SERVER_SETUP_HOME:-$HOME}"
 BASHRC_PATH="${SERVER_SETUP_BASHRC:-${MANAGED_HOME}/.bashrc}"
 ZSHRC_PATH="${SERVER_SETUP_ZSHRC:-${MANAGED_HOME}/.zshrc}"
@@ -634,12 +634,12 @@ proxy_menu() {
     local confirm
     while true; do
         tui_select \
-            "${APP_NAME} — Work Environment — Automatic Proxy" \
+            "${APP_NAME} — Remote Server — Automatic Proxy" \
             "User-level files only; this screen never calls sudo." \
             "Configure or update|Write the Bash block, tunnel settings, and optional credentials." \
             "Remove configuration|Delete only TUI-managed proxy files and the managed Bash block." \
             "Show status|Inspect managed files, authentication state, and the local endpoint." \
-            "Back|Return to work environment configuration."
+            "Back|Return to the remote server menu."
         tui_clear
         case "$TUI_SELECTED" in
             0) configure_proxy; pause ;;
@@ -662,12 +662,12 @@ zsh_menu() {
     local confirm
     while true; do
         tui_select \
-            "${APP_NAME} — Work Environment — Zsh" \
+            "${APP_NAME} — Zsh" \
             "User-level configuration; an existing .zshrc is backed up." \
             "Configure or update|Install Zsh if needed, Oh My Zsh, plugins, and the managed .zshrc." \
             "Remove configuration|Restore .zshrc and PATH; retain downloaded software and plugins." \
             "Show status|Inspect Zsh, Oh My Zsh, plugins, and managed state." \
-            "Back|Return to work environment configuration."
+            "Back|Return to General."
         tui_clear
         case "$TUI_SELECTED" in
             0) configure_zsh; pause ;;
@@ -686,12 +686,12 @@ tmux_menu() {
     local confirm
     while true; do
         tui_select \
-            "${APP_NAME} — Work Environment — Tmux" \
+            "${APP_NAME} — Tmux" \
             "User-level configuration that preserves existing .tmux.conf content." \
             "Configure or update|Add one managed source-file block for the repository template." \
             "Remove configuration|Remove only the managed source-file block." \
             "Show status|Inspect the Tmux executable, target file, and managed state." \
-            "Back|Return to work environment configuration."
+            "Back|Return to General."
         tui_clear
         case "$TUI_SELECTED" in
             0) configure_tmux; pause ;;
@@ -706,20 +706,62 @@ tmux_menu() {
     done
 }
 
-work_environment_menu() {
+general_workspace_menu() {
     while true; do
         tui_select \
-            "${APP_NAME} — Work Environment" \
-            "All operations here are user-level and do not use sudo." \
-            "Automatic proxy|Manage Bash proxy detection, SSH tunnel settings, and credentials." \
+            "${APP_NAME} — General" \
+            "Configure terminal tools shared by local and remote workspaces." \
             "Zsh|Install Zsh, Oh My Zsh, plugins, and a restorable user profile." \
-            "Tmux|Load the repository Tmux template without replacing existing settings." \
-            "Back|Return to the main menu."
+            "Tmux|Load the repository Tmux template while preserving existing settings." \
+            "Back|Return to Workspace."
+        case "$TUI_SELECTED" in
+            0) zsh_menu ;;
+            1) tmux_menu ;;
+            2) return ;;
+        esac
+    done
+}
+
+remote_workspace_menu() {
+    while true; do
+        tui_select \
+            "${APP_NAME} — Remote Server" \
+            "Configure internet access for the current user." \
+            "Automatic proxy|Manage Bash proxy detection, SSH tunnel settings, and credentials." \
+            "Back|Return to Workspace."
         case "$TUI_SELECTED" in
             0) proxy_menu ;;
-            1) zsh_menu ;;
-            2) tmux_menu ;;
-            3) return ;;
+            1) return ;;
+        esac
+    done
+}
+
+workspace_menu() {
+    while true; do
+        tui_select \
+            "${APP_NAME} — Workspace (Linux/macOS/WSL)" \
+            "Choose a workspace section." \
+            "General|Configure shared terminal tools." \
+            "Local|View research and writing resources." \
+            "Personal Server (HomeLab)|View the HomeLab section." \
+            "Remote Server|Configure the automatic proxy." \
+            "Back|Return to the main menu."
+        case "$TUI_SELECTED" in
+            0) general_workspace_menu ;;
+            1)
+                tui_select \
+                    "${APP_NAME} — Local" \
+                    "See 01-Workspace/local/README.md for research and writing setup." \
+                    "Back|Return to Workspace."
+                ;;
+            2)
+                tui_select \
+                    "${APP_NAME} — Personal Server (HomeLab)" \
+                    "See 01-Workspace/homelab/README.md for planned setup topics." \
+                    "Back|Return to Workspace."
+                ;;
+            3) remote_workspace_menu ;;
+            4) return ;;
         esac
     done
 }
@@ -756,7 +798,7 @@ server_management_menu() {
     local confirm
     while true; do
         tui_select \
-            "${APP_NAME} — Server Management" \
+            "${APP_NAME} — Remote Server Management" \
             "Status is read-only; install, update, and removal explicitly call sudo." \
             "Disk warning status (read-only)|Inspect installed files, timer state, and cached reports." \
             "Install detailed disk warning (root)|Install the scanner, login hook, configuration, and timer." \
@@ -797,11 +839,11 @@ interactive_menu() {
         tui_select \
             "$APP_NAME" \
             "Choose a configuration scope." \
-            "Work environment (no root)|Configure per-user proxy, Zsh, and Tmux files." \
-            "Server management (usually root)|Inspect or manage shared disk warning services." \
+            "Workspace (Linux/macOS/WSL)|Open General, Local, HomeLab, or Remote Server." \
+            "Remote Server Management|Inspect or manage shared disk warning services." \
             "Exit|Close the TUI without changing configuration."
         case "$TUI_SELECTED" in
-            0) work_environment_menu ;;
+            0) workspace_menu ;;
             1) server_management_menu ;;
             2) tui_clear; return ;;
         esac

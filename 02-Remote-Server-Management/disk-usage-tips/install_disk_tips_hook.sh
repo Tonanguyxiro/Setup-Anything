@@ -13,7 +13,7 @@ fi
 
 cat > "$HOOK_PATH" <<'EOF'
 # Show shared-disk usage tips when entering public data directories.
-# This file is installed by Sever-Setup/04-Public-Sever/disk-tips/install_disk_tips_hook.sh.
+# This file is installed by Sever-Setup/02-Remote-Server-Management/disk-usage-tips/install_disk_tips_hook.sh.
 
 disk_tips_show() {
     cat <<TIP

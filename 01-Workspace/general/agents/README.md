@@ -1,4 +1,6 @@
-# 03-Agents
+# AI Agents
+
+Install AI Agent tools and configure user and project rules.
 
 <table>
   <thead>
@@ -9,8 +11,8 @@
   </thead>
   <tbody>
     <tr>
-      <td>AI Agent Usage</td>
-      <td><a href="./AGENT.md">AGENT.md</a></td>
+      <td>Karpathy Skills</td>
+      <td><a href="./andrej-karpathy-skills/README.md">Submodule guide</a></td>
     </tr>
   </tbody>
 </table>
@@ -21,7 +23,7 @@
   <thead>
     <tr>
       <th>Agent / Tools</th>
-      <th>安装命令</th>
+      <th>Install Command</th>
     </tr>
   </thead>
   <tbody>
@@ -46,18 +48,18 @@
 
 ## Configure Agents
 
-### Skills 
+### Skills
 
-- [](https://github.com/forrestchang/andrej-karpathy-skills/tree/main)
+- [Andrej Karpathy Skills](./andrej-karpathy-skills/README.md)
 
 ### `AGENTS.md`
 
 - **User Level** Rules
     - [Andrej Karpathy Skills](https://github.com/forrestchang/andrej-karpathy-skills/tree/main)
-        - Use as user level instruction
-        - Test by input: `Summarise all rules and instructions level by level`
-        - Normally we use `AGENTS.md`
+        - Use these rules as user-level instructions.
+        - Check that the agent loaded the rules by asking `Summarise all rules and instructions level by level`
+        - Store the rules in `AGENTS.md`.
 - **Project Level** Rules
-    - [Agent Style](https://github.com/yzhao062/agent-style): 
-        - `uv tool install agent-style`​
-        - In project/paper dictionary: `agent-style enable agents-md`
+    - [Agent Style](https://github.com/yzhao062/agent-style)
+        - Install with `uv tool install agent-style`.
+        - Run `agent-style enable agents-md` in the project or paper directory.

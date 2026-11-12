@@ -1,12 +1,11 @@
 # Setup Anything
 
-新服务器开荒教程与脚本。包括环境配置，数据迁移。
+Guides and scripts for local development, remote server workspaces, and shared server disk management.
 
-
-
-
-
-
+<table>
+  <tr><td><a href="./01-Workspace/README.md">Workspace (Linux/macOS/WSL)</a></td><td>General, Local, HomeLab, and Remote Server</td></tr>
+  <tr><td><a href="./02-Remote-Server-Management/README.md">Remote Server Management</a></td></tr>
+</table>
 
 ## Usage
 
@@ -18,10 +17,8 @@ Run the unified entry point from the repository root:
 
 The menu reads keys with Bash `read` and renders with ANSI escape sequences. Use `↑`/`↓` or `j`/`k` to move and `Enter` to select. UI primitives live in [`tui/tui.sh`](./tui/tui.sh), while configuration logic remains in `setup.sh`.
 
-The main menu separates two permission levels:
-
-- **Work environment** changes files owned by the current user and never calls `sudo`. It manages automatic proxy, Zsh, and Tmux configuration while preserving existing files through marked blocks or backups.
-- **Server management** manages system services. Read-only status checks run without root; install, update, and removal actions call `sudo` explicitly.
+- **Workspace** groups Zsh and Tmux under General and the automatic proxy under Remote Server. Local and HomeLab link to their guides.
+- **Remote Server Management** checks the detailed disk warning status and uses `sudo` to install, update, or remove it.
 
 Direct commands are also available:
 
@@ -49,19 +46,19 @@ Cmnd_Alias SERVER_SETUP_READONLY = /usr/bin/systemctl is-active disk_usage_warn.
 
 The administrator must adjust paths and the group, then validate the file with `visudo -c`. The example uses `systemctl` operations that do not start a pager and passes `--no-pager` to `journalctl`. Command arguments are part of sudoers matching, so review and add each new read-only command explicitly instead of using `*`.
 
-## 基础配置
+## Basic Server Setup
 
-### 换源
+### Change the APT Mirror
 
 ```shell
 sudo cp -a /etc/apt/sources.list /etc/apt/sources.list.bak
 ```
 
-Edit Configuration
+Replace the Ubuntu archive and security mirror URLs.
 
 ```shell
-sudo sed -i "s@http://.*archive.ubuntu.com@<https://mirrors.sustech.edu.cn@g>" /etc/apt/sources.list
-sudo sed -i "s@http://.*security.ubuntu.com@<https://mirrors.sustech.edu.cn@g>" /etc/apt/sources.list
+sudo sed -i "s@http://.*archive.ubuntu.com@https://mirrors.sustech.edu.cn@g" /etc/apt/sources.list
+sudo sed -i "s@http://.*security.ubuntu.com@https://mirrors.sustech.edu.cn@g" /etc/apt/sources.list
 ```
 
 Refresh Repository Indexes

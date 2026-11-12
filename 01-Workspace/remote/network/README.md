@@ -12,6 +12,14 @@
       <td>Proxy Settings</td>
       <td><a href="./PROXY.md">PROXY.md</a></td>
     </tr>
+    <tr>
+      <td>Mihomo HTTPS Proxy</td>
+      <td><a href="./MIHOMO.md">MIHOMO.md</a></td>
+    </tr>
+  <tr>
+      <td>Codex over Remote-SSH</td>
+      <td><a href="./CODEX.md">CODEX.md</a></td>
+    </tr>
   </tbody>
 </table>
 

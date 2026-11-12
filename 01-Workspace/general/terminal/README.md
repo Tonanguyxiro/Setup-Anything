@@ -1,7 +1,5 @@
 # Terminal Environment
 
-English | [中文](./README_zh.md)
-
 Use the TUI at the repository root to configure Zsh and Tmux for the current user. These operations do not require root:
 
 ```bash
@@ -28,6 +26,8 @@ The template contains no user-specific Conda path. It enables the Conda plugin o
 The TUI requires an existing `tmux` executable. It appends one marked `source-file` block to `~/.tmux.conf` and preserves existing content. Removing the configuration deletes only that block. Settings already loaded by a running Tmux server remain active until the configuration is reloaded or the server restarts.
 
 ## Direct Commands
+
+If you configured Tmux before the workspace reorganization, run `./setup.sh tmux configure` from the repository root to update the managed template path.
 
 ```bash
 ./setup.sh zsh configure

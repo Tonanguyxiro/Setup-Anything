@@ -2,5 +2,5 @@
 	path = config/tmux/tmux.conf
 	url = https://github.com/zuorn/tmux.conf.git
 [submodule "03-Agents/andrej-karpathy-skills"]
-	path = 03-Agents/andrej-karpathy-skills
+	path = 01-Workspace/general/agents/andrej-karpathy-skills
 	url = https://github.com/multica-ai/andrej-karpathy-skills.git

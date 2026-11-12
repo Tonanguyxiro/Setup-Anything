@@ -6,7 +6,7 @@ conventions when they `cd` into a data directory.
 <table>
   <tr><td>Hook installer</td><td><a href="./install.sh">install.sh</a></td><td>Installs one folder rule at a time</td></tr>
   <tr><td>Hook source</td><td><a href="./install_disk_tips_hook.sh">install_disk_tips_hook.sh</a></td><td>The shell hook written to <code>/etc/profile.d/</code></td></tr>
-  <tr><td>Disk warnings</td><td><a href="../disk-warning/disk-warning-detailed">disk-warning-detailed</a></td><td>Login warning when a disk is full, plus per-user cleanup advice（中文文档）</td></tr>
+  <tr><td>Disk warnings</td><td><a href="../disk-warning/disk-warning-detailed">disk-warning-detailed</a></td><td>Login warning when a disk is full, plus per-user cleanup advice</td></tr>
   <tr><td>Light version</td><td><a href="../disk-warning/disk-warning-light">disk-warning-light</a></td><td>Single-file <code>/home</code> usage warning</td></tr>
 </table>
 
